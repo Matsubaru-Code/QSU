@@ -105,7 +105,6 @@ function main()
             downloadUrlToFile(script_url, script_path)
             sampAddChatMessage("Ñêðèïò óñïåøíî îáíîâëåí!", -1)
             thisScript():reload()
-            update_state = not update_state
             break
         end
     end
