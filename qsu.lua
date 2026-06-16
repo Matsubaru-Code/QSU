@@ -104,9 +104,10 @@ function main()
         if update_state then
             downloadUrlToFile(script_url, script_path, function(id, status)
                 if status == dlstatus.STATUS_ENDDOWNLOADDATA then
-                    sampAddChatMessage(u8:decode"Скрипт успешно обновлен!", -1)
+                    sampAddChatMessage(u8:decode"{0079bf}[QSU]:{FFFFFF}Скрипт успешно обновлен!", -1)
                     thisScript():reload()
                 end
+                update_state = false
             end)
             break
         end
