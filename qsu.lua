@@ -13,7 +13,7 @@ local json = require 'json'
 local requests = require 'requests'
 
 script_author('Matsubaru')
-script_name('Быстрый розыск v2')
+script_name(u8:decode'Быстрый розыск v2')
 
 local id = 0
 local nick = ''
@@ -70,8 +70,68 @@ function main()
         update_state = true
     end
 
+    local config_base_url = "https://raw.githubusercontent.com/Matsubaru-Code/QSU/main/configs/"
+
+    local function downloadConfig(server, callback)
+        local path = getWorkingDirectory()..'\\config\\'..server:lower()..'.json'
+        local url = config_base_url..server:lower()..'.json'
+        downloadUrlToFile(url, path, function(id, status)
+            if status == dlstatus.STATUS_ENDDOWNLOADDATA then
+                if callback then callback() end
+            end
+        end)
+    end
+
+    local function checkAndUpdateConfig(server, callback)
+        local path = getWorkingDirectory()..'\\config\\'..server:lower()..'.json'
+        local file = io.open(path, 'r')
+        
+        if not file then
+            -- конфига нет — скачиваем
+            print(u8:decode'[QSU] Конфиг '..server..u8:decode' не найден, скачиваю...')
+            downloadConfig(server, callback)
+            return
+        end
+        
+        local content = file:read('*a')
+        file:close()
+        
+        local ok, data = pcall(json.decode, content)
+        local localVersion = ok and data and data.version or 0
+        
+        -- получаем версию с гитхаба
+        local ok2, remoteData = pcall(function()
+            local r = requests.get(config_base_url..server:lower()..'.json?nocache='..math.random(1,999999))
+            return json.decode(r.text)
+        end)
+        
+        if ok2 and remoteData and remoteData.version then
+            if remoteData.version > localVersion then
+                print(u8:decode'[QSU] Обновляю конфиг '..server..' ('..localVersion..' -> '..remoteData.version..')')
+                downloadConfig(server, callback)
+            else
+                print(u8:decode'[QSU] Конфиг '..server..u8:decode' актуален (v'..localVersion..')')
+                if callback then callback() end
+            end
+        else
+            print(u8:decode'[QSU] Не удалось проверить версию конфига '..server)
+            if callback then callback() end
+        end
+    end
+
+
+    os.execute('mkdir "'..getWorkingDirectory()..'\\config" 2>nul')
+
+    -- проверяем и обновляем каждый конфиг
+    local loaded = 0
     for _, name in ipairs(serverList) do
-    serverData[name] = loadConfig(name)
+        checkAndUpdateConfig(name, function()
+            serverData[name] = loadConfig(name)
+            loaded = loaded + 1
+            if loaded == #serverList then
+                sampAddChatMessage(u8:decode'{0079bf}[QSU]:{FFFFFF} Все конфиги загружены!', -1)
+            end
+        end)
     end
     sampRegisterChatCommand('qsu', function(arg)
         if arg == nil or arg == '' then
