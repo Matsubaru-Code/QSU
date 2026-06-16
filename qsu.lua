@@ -22,7 +22,7 @@ local dlstatus = require('moonloader').download_status
 local sampev = require 'lib.samp.events'
 
 
-local version = 1.3
+local version = 1.4
 update_state = false
 local update_url = requests.get("https://raw.githubusercontent.com/Matsubaru-Code/QSU/refs/heads/main/update.json")
 local script_url = "https://github.com/Matsubaru-Code/QSU/raw/refs/heads/main/qsu.lua"
