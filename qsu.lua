@@ -13,19 +13,19 @@ local json = require 'json'
 local requests = require 'requests'
 
 script_author('Matsubaru')
-script_name('Быстрый розыск v2')
+script_name('ГЃГ»Г±ГІГ°Г»Г© Г°Г®Г§Г»Г±ГЄ v2')
 
 local id = 0
 local nick = ''
 
 local dlstatus = require('moonloader').download_status
 local sampev = require 'lib.samp.events'
-local version = 1
+local version = 1.3
 update_state = false
 local update_url = requests.get("https://raw.githubusercontent.com/Matsubaru-Code/QSU/refs/heads/main/update.json")
 local script_url = "https://github.com/Matsubaru-Code/QSU/raw/refs/heads/main/qsu%20%E2%80%94%20%D0%BA%D0%BE%D0%BF%D0%B8%D1%8F.lua"
 local script_path = thisScript().path
-a = decodeJson(update_url.text) -- Получаем её, декодируем
+a = decodeJson(update_url.text) -- ГЏГ®Г«ГіГ·Г ГҐГ¬ ГҐВё, Г¤ГҐГЄГ®Г¤ГЁГ°ГіГҐГ¬
 
 
 
@@ -51,9 +51,9 @@ local currentServer = 'Texas'
 
 local function su(stat, lvl)
     lua_thread.create(function()
-        sampSendChat('/me сняв КПК с тактического пояса, нашёл досье преступника, после чего зайдя в пункт "Wanted"..')
+        sampSendChat('/me Г±Г­ГїГў ГЉГЏГЉ Г± ГІГ ГЄГІГЁГ·ГҐГ±ГЄГ®ГЈГ® ГЇГ®ГїГ±Г , Г­Г ГёВёГ« Г¤Г®Г±ГјГҐ ГЇГ°ГҐГ±ГІГіГЇГ­ГЁГЄГ , ГЇГ®Г±Г«ГҐ Г·ГҐГЈГ® Г§Г Г©Г¤Гї Гў ГЇГіГ­ГЄГІ "Wanted"..')
         wait(1000)
-        sampSendChat('/me ..ввёл некоторые коррективы в досье преступника, после чего убрал КПК на тактический пояс')
+        sampSendChat('/me ..ГўГўВёГ« Г­ГҐГЄГ®ГІГ®Г°Г»ГҐ ГЄГ®Г°Г°ГҐГЄГІГЁГўГ» Гў Г¤Г®Г±ГјГҐ ГЇГ°ГҐГ±ГІГіГЇГ­ГЁГЄГ , ГЇГ®Г±Г«ГҐ Г·ГҐГЈГ® ГіГЎГ°Г Г« ГЉГЏГЉ Г­Г  ГІГ ГЄГІГЁГ·ГҐГ±ГЄГЁГ© ГЇГ®ГїГ±')
         wait(1000)
         sampSendChat("/su "..id..' '..lvl..' '..stat)
         sampAddChatMessage("/su "..id..' '..lvl..' '..stat, -1)
@@ -64,7 +64,7 @@ function main()
     while not isSampAvailable() do wait(0) end
     sampAddChatMessage(a["version"],-1)
     if tonumber(a["version"]) > version then
-        sampAddChatMessage("Есть обновление! Версия: " .. a["version"], -1)
+        sampAddChatMessage("Г…Г±ГІГј Г®ГЎГ­Г®ГўГ«ГҐГ­ГЁГҐ! Г‚ГҐГ°Г±ГЁГї: " .. a["version"], -1)
         update_state = true
     end
 
@@ -73,12 +73,12 @@ function main()
     end
     sampRegisterChatCommand('qsu', function(arg)
         if arg == nil or arg == '' then
-            sampAddChatMessage("{0079bf}[QSU]:{FFFFFF} Введите {03A89E}/qsu{FFFFFF} [ID].", -1)
+            sampAddChatMessage("{0079bf}[QSU]:{FFFFFF} Г‚ГўГҐГ¤ГЁГІГҐ {03A89E}/qsu{FFFFFF} [ID].", -1)
             return
         end
         local playerId = tonumber(arg)
         if not playerId then
-            sampAddChatMessage("{0079bf}[QSU]:{FFFFFF} ID должен быть числом.", -1)
+            sampAddChatMessage("{0079bf}[QSU]:{FFFFFF} ID Г¤Г®Г«Г¦ГҐГ­ ГЎГ»ГІГј Г·ГЁГ±Г«Г®Г¬.", -1)
             return
         end
         if sampIsPlayerConnected(playerId) then
@@ -86,13 +86,13 @@ function main()
             id = playerId
             nick = sampGetPlayerNickname(id)
         else
-            sampAddChatMessage("{0079bf}[QSU]:{FFFFFF} Человека с id: {0079bf}"..playerId..', {c21d1d}не существует.', -1)
+            sampAddChatMessage("{0079bf}[QSU]:{FFFFFF} Г—ГҐГ«Г®ГўГҐГЄГ  Г± id: {0079bf}"..playerId..', {c21d1d}Г­ГҐ Г±ГіГ№ГҐГ±ГІГўГіГҐГІ.', -1)
         end
     end)
     lua_thread.create(function()
         wait(7000)
         sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Script was created by {0079bf}Matsubaru Clan', -1)
-        sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Для активации введите {03A89E}/qsu{FFFFFF} [ID].', -1)
+        sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Г„Г«Гї Г ГЄГІГЁГўГ Г¶ГЁГЁ ГўГўГҐГ¤ГЁГІГҐ {03A89E}/qsu{FFFFFF} [ID].', -1)
     end)
     while true do
         wait(0)
@@ -103,7 +103,7 @@ function main()
             
             
             downloadUrlToFile(script_url, script_path)
-            sampAddChatMessage("Скрипт успешно обновлен!", -1)
+            sampAddChatMessage("Г‘ГЄГ°ГЁГЇГІ ГіГ±ГЇГҐГёГ­Г® Г®ГЎГ­Г®ГўГ«ГҐГ­!", -1)
             thisScript():reload()
             update_state = not update_state
             break
@@ -118,7 +118,7 @@ function loadConfig(server)
     local file = io.open(path, 'r')
 
     if not file then
-        print('{0079bf}[QSU]:{FFFFFF} Не найден конфиг: '..server)
+        print('{0079bf}[QSU]:{FFFFFF} ГЌГҐ Г­Г Г©Г¤ГҐГ­ ГЄГ®Г­ГґГЁГЈ: '..server)
         return nil
     end
 
@@ -128,7 +128,7 @@ function loadConfig(server)
     local ok, data = pcall(json.decode, content)
 
     if not ok then
-        print('{0079bf}[QSU]:{FFFFFF} Ошибка JSON: '..server)
+        print('{0079bf}[QSU]:{FFFFFF} ГЋГёГЁГЎГЄГ  JSON: '..server)
         return nil
     end
 
@@ -142,10 +142,10 @@ local newFrame = imgui.OnFrame(
         local sizeX, sizeY = 750, 400
         imgui.SetNextWindowPos(imgui.ImVec2(resX / 2, resY / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
         imgui.SetNextWindowSize(imgui.ImVec2(sizeX, sizeY), imgui.Cond.FirstUseEver)
-        imgui.Begin(u8'Быстрый розыск || '..nick..'['..id..']', renderWindow, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse)
+        imgui.Begin(u8'ГЃГ»Г±ГІГ°Г»Г© Г°Г®Г§Г»Г±ГЄ || '..nick..'['..id..']', renderWindow, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse)
         imgui.SetWindowFontScale(1.1)
 
-        -- вкладки серверов
+        -- ГўГЄГ«Г Г¤ГЄГЁ Г±ГҐГ°ГўГҐГ°Г®Гў
         if imgui.BeginTabBar(u8'servers') then
             for _, name in ipairs(serverList) do
                 if imgui.BeginTabItem(u8(name)) then
@@ -158,7 +158,7 @@ local newFrame = imgui.OnFrame(
 
         imgui.Separator()
 
-        -- поле ввода + кнопка
+        -- ГЇГ®Г«ГҐ ГўГўГ®Г¤Г  + ГЄГ­Г®ГЇГЄГ 
         local inputText = u8:decode(str(inputField))
         local len = #inputText
         local width = math.max(110, math.min(400, len * 8))
@@ -168,22 +168,22 @@ local newFrame = imgui.OnFrame(
         imgui.PopItemWidth()
 
         imgui.PushStyleVarFloat(imgui.StyleVar.FrameRounding, 8)
-        -- Функция очистки номера статьи
+        -- Г”ГіГ­ГЄГ¶ГЁГї Г®Г·ГЁГ±ГІГЄГЁ Г­Г®Г¬ГҐГ°Г  Г±ГІГ ГІГјГЁ
         local function cleanArticleNumber(s)
-            -- Оставляем только цифры и точку
+            -- ГЋГ±ГІГ ГўГ«ГїГҐГ¬ ГІГ®Г«ГјГЄГ® Г¶ГЁГґГ°Г» ГЁ ГІГ®Г·ГЄГі
             s = s:gsub('[^%d%.]', '')
-            -- Убираем лишние точки в начале/конце/подряд
+            -- Г“ГЎГЁГ°Г ГҐГ¬ Г«ГЁГёГ­ГЁГҐ ГІГ®Г·ГЄГЁ Гў Г­Г Г·Г Г«ГҐ/ГЄГ®Г­Г¶ГҐ/ГЇГ®Г¤Г°ГїГ¤
             s = s:gsub('^%.', ''):gsub('%.$', ''):gsub('%.%.+', '.')
             return s
         end
 
-        if imgui.Button(u8'Объявить', imgui.ImVec2(90, 25)) then
+        if imgui.Button(u8'ГЋГЎГєГїГўГЁГІГј', imgui.ImVec2(90, 25)) then
             local text = u8:decode(str(inputField))
             if text == '' then return end
 
             local data = serverData[currentServer]
             if not data then
-                sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Ошибка конфига: '..currentServer, -1)
+                sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} ГЋГёГЁГЎГЄГ  ГЄГ®Г­ГґГЁГЈГ : '..currentServer, -1)
                 return
             end
 
@@ -194,7 +194,7 @@ local newFrame = imgui.OnFrame(
                     table.insert(articles, cleaned)
                 end
             end
-            sampAddChatMessage("Обработанные статьи: " .. table.concat(articles, ", "), -1)
+            sampAddChatMessage("ГЋГЎГ°Г ГЎГ®ГІГ Г­Г­Г»ГҐ Г±ГІГ ГІГјГЁ: " .. table.concat(articles, ", "), -1)
             local total = 0
             local result = {}
             local found = false
@@ -206,12 +206,12 @@ local newFrame = imgui.OnFrame(
                     table.insert(result, art)
                     found = true
                 else
-                    sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Статья "' .. art .. '" не найдена в конфиге.', -1)
+                    sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Г‘ГІГ ГІГјГї "' .. art .. '" Г­ГҐ Г­Г Г©Г¤ГҐГ­Г  Гў ГЄГ®Г­ГґГЁГЈГҐ.', -1)
                 end
             end
 
             if not found then
-                sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Статьи не найдены. Используйте формат: 2.5 + 4.1.1', -1)
+                sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Г‘ГІГ ГІГјГЁ Г­ГҐ Г­Г Г©Г¤ГҐГ­Г». Г€Г±ГЇГ®Г«ГјГ§ГіГ©ГІГҐ ГґГ®Г°Г¬Г ГІ: 2.5 + 4.1.1', -1)
                 return
             end
 
@@ -219,9 +219,9 @@ local newFrame = imgui.OnFrame(
             local resultText = table.concat(result, ' + ')
 
             lua_thread.create(function()
-                sampSendChat('/me сняв КПК с тактического пояса, нашёл досье преступника, после чего зайдя в пункт "Wanted"..')
+                sampSendChat('/me Г±Г­ГїГў ГЉГЏГЉ Г± ГІГ ГЄГІГЁГ·ГҐГ±ГЄГ®ГЈГ® ГЇГ®ГїГ±Г , Г­Г ГёВёГ« Г¤Г®Г±ГјГҐ ГЇГ°ГҐГ±ГІГіГЇГ­ГЁГЄГ , ГЇГ®Г±Г«ГҐ Г·ГҐГЈГ® Г§Г Г©Г¤Гї Гў ГЇГіГ­ГЄГІ "Wanted"..')
                 wait(1000)
-                sampSendChat('/me ..ввёл некоторые коррективы в досье преступника, после чего убрал КПК на тактический пояс')
+                sampSendChat('/me ..ГўГўВёГ« Г­ГҐГЄГ®ГІГ®Г°Г»ГҐ ГЄГ®Г°Г°ГҐГЄГІГЁГўГ» Гў Г¤Г®Г±ГјГҐ ГЇГ°ГҐГ±ГІГіГЇГ­ГЁГЄГ , ГЇГ®Г±Г«ГҐ Г·ГҐГЈГ® ГіГЎГ°Г Г« ГЉГЏГЉ Г­Г  ГІГ ГЄГІГЁГ·ГҐГ±ГЄГЁГ© ГЇГ®ГїГ±')
                 wait(1000)
                 sampSendChat("/su "..id.." "..total.." "..resultText)
                 sampAddChatMessage("/su "..id.." "..total.." "..resultText, -1)
@@ -231,13 +231,13 @@ local newFrame = imgui.OnFrame(
 
         if imgui.IsItemHovered() then
             imgui.BeginTooltip()
-            imgui.Text(u8'Ручной ввод (2.5 + 4.1.1 + ...)')
+            imgui.Text(u8'ГђГіГ·Г­Г®Г© ГўГўГ®Г¤ (2.5 + 4.1.1 + ...)')
             imgui.EndTooltip()
         end
 
         imgui.Separator()
 
-        -- главы текущего сервера
+        -- ГЈГ«Г ГўГ» ГІГҐГЄГіГ№ГҐГЈГ® Г±ГҐГ°ГўГҐГ°Г 
         local data = serverData[currentServer]
         if data and data.chapters and #data.chapters > 0 then
             for _, chapter in ipairs(data.chapters) do
@@ -250,7 +250,7 @@ local newFrame = imgui.OnFrame(
                 end
             end
         else
-            -- Получаем размеры доступной области (отступы уже учтены)
+            -- ГЏГ®Г«ГіГ·Г ГҐГ¬ Г°Г Г§Г¬ГҐГ°Г» Г¤Г®Г±ГІГіГЇГ­Г®Г© Г®ГЎГ«Г Г±ГІГЁ (Г®ГІГ±ГІГіГЇГ» ГіГ¦ГҐ ГіГ·ГІГҐГ­Г»)
             local avail = imgui.GetContentRegionAvail()
             local text = u8"SOON"
             local textSize = imgui.CalcTextSize(text)
