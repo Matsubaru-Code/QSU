@@ -88,7 +88,7 @@ function main()
             id = playerId
             nick = sampGetPlayerNickname(id)
         else
-            sampAddChatMessage(u8:decode"{0079bf}[QSU]:{FFFFFF} Человека с id: {0079bf}"..playerId..', {c21d1d}не существует.', -1)
+            sampAddChatMessage(u8:decode"{0079bf}[QSU]:{FFFFFF} Игрока с id: {0079bf}"..playerId..u8:decode', {c21d1d}не существует.', -1)
         end
     end)
     lua_thread.create(function()
