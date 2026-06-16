@@ -13,19 +13,21 @@ local json = require 'json'
 local requests = require 'requests'
 
 script_author('Matsubaru')
-script_name('Áûñòðûé ðîçûñê v2')
+script_name('Быстрый розыск v2')
 
 local id = 0
 local nick = ''
 
 local dlstatus = require('moonloader').download_status
 local sampev = require 'lib.samp.events'
+
+
 local version = 1.3
 update_state = false
 local update_url = requests.get("https://raw.githubusercontent.com/Matsubaru-Code/QSU/refs/heads/main/update.json")
 local script_url = "https://github.com/Matsubaru-Code/QSU/raw/refs/heads/main/qsu.lua"
 local script_path = thisScript().path
-a = decodeJson(update_url.text) -- Ïîëó÷àåì å¸, äåêîäèðóåì
+a = decodeJson(update_url.text) -- Получаем её, декодируем
 
 
 
@@ -44,27 +46,27 @@ end
 
 
 local serverData = {}
-local serverList = {'Texas', 'Florida', 'Nevada'}
+local serverList = {'Texas', 'Florida', 'Nevada', 'Hawaii', 'Indiana'}
 local currentServer = 'Texas'
 
 
 
 local function su(stat, lvl)
     lua_thread.create(function()
-        sampSendChat('/me ñíÿâ ÊÏÊ ñ òàêòè÷åñêîãî ïîÿñà, íàø¸ë äîñüå ïðåñòóïíèêà, ïîñëå ÷åãî çàéäÿ â ïóíêò "Wanted"..')
+        sampSendChat(u8:decode'/me сняв КПК с тактического пояса, нашёл досье преступника, после чего зайдя в пункт "Wanted"..')
         wait(1000)
-        sampSendChat('/me ..ââ¸ë íåêîòîðûå êîððåêòèâû â äîñüå ïðåñòóïíèêà, ïîñëå ÷åãî óáðàë ÊÏÊ íà òàêòè÷åñêèé ïîÿñ')
+        sampSendChat(u8:decode'/me ..ввёл некоторые коррективы в досье преступника, после чего убрал КПК на тактический пояс')
         wait(1000)
-        sampSendChat("/su "..id..' '..lvl..' '..stat)
-        sampAddChatMessage("/su "..id..' '..lvl..' '..stat, -1)
+        sampSendChat(u8:decode"/su "..id..' '..lvl..' '..stat)
+        sampAddChatMessage(u8:decode"/su "..id..' '..lvl..' '..stat, -1)
     end)
 end
 
 function main()
     while not isSampAvailable() do wait(0) end
-    sampAddChatMessage(a["version"],-1)
+    --sampAddChatMessage(u8:decodea["version"],-1)
     if tonumber(a["version"]) > version then
-        sampAddChatMessage("Åñòü îáíîâëåíèå! Âåðñèÿ: " .. a["version"], -1)
+        sampAddChatMessage(u8:decode"{0079bf}[QSU]:{FFFFFF}Есть обновление! Версия: {03A89E}" .. a["version"], -1)
         update_state = true
     end
 
@@ -73,12 +75,12 @@ function main()
     end
     sampRegisterChatCommand('qsu', function(arg)
         if arg == nil or arg == '' then
-            sampAddChatMessage("{0079bf}[QSU]:{FFFFFF} Ââåäèòå {03A89E}/qsu{FFFFFF} [ID].", -1)
+            sampAddChatMessage(u8:decode"{0079bf}[QSU]:{FFFFFF} Введите {03A89E}/qsu{FFFFFF} [ID].", -1)
             return
         end
         local playerId = tonumber(arg)
         if not playerId then
-            sampAddChatMessage("{0079bf}[QSU]:{FFFFFF} ID äîëæåí áûòü ÷èñëîì.", -1)
+            sampAddChatMessage(u8:decode"{0079bf}[QSU]:{FFFFFF} ID должен быть числом.", -1)
             return
         end
         if sampIsPlayerConnected(playerId) then
@@ -86,13 +88,13 @@ function main()
             id = playerId
             nick = sampGetPlayerNickname(id)
         else
-            sampAddChatMessage("{0079bf}[QSU]:{FFFFFF} ×åëîâåêà ñ id: {0079bf}"..playerId..', {c21d1d}íå ñóùåñòâóåò.', -1)
+            sampAddChatMessage(u8:decode"{0079bf}[QSU]:{FFFFFF} Человека с id: {0079bf}"..playerId..', {c21d1d}не существует.', -1)
         end
     end)
     lua_thread.create(function()
         wait(7000)
-        sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Script was created by {0079bf}Matsubaru Clan', -1)
-        sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Äëÿ àêòèâàöèè ââåäèòå {03A89E}/qsu{FFFFFF} [ID].', -1)
+        sampAddChatMessage(u8:decode'{0079bf}[QSU]:{FFFFFF} Script was created by {0079bf}Matsubaru Clan', -1)
+        sampAddChatMessage(u8:decode'{0079bf}[QSU]:{FFFFFF} Для активации введите {03A89E}/qsu{FFFFFF} [ID].', -1)
     end)
     while true do
         wait(0)
@@ -100,11 +102,12 @@ function main()
             imgui.Process = false
         end
         if update_state then
-            
-            
-            downloadUrlToFile(script_url, script_path)
-            sampAddChatMessage("Ñêðèïò óñïåøíî îáíîâëåí!", -1)
-            thisScript():reload()
+            downloadUrlToFile(script_url, script_path, function(id, status)
+                if status == dlstatus.STATUS_ENDDOWNLOADDATA then
+                    sampAddChatMessage(u8:decode"Скрипт успешно обновлен!", -1)
+                    thisScript():reload()
+                end
+            end)
             break
         end
     end
@@ -117,7 +120,7 @@ function loadConfig(server)
     local file = io.open(path, 'r')
 
     if not file then
-        print('{0079bf}[QSU]:{FFFFFF} Íå íàéäåí êîíôèã: '..server)
+        print('{0079bf}[QSU]:{FFFFFF} Не найден конфиг: '..server)
         return nil
     end
 
@@ -127,7 +130,7 @@ function loadConfig(server)
     local ok, data = pcall(json.decode, content)
 
     if not ok then
-        print('{0079bf}[QSU]:{FFFFFF} Îøèáêà JSON: '..server)
+        print('{0079bf}[QSU]:{FFFFFF} Ошибка JSON: '..server)
         return nil
     end
 
@@ -141,10 +144,10 @@ local newFrame = imgui.OnFrame(
         local sizeX, sizeY = 750, 400
         imgui.SetNextWindowPos(imgui.ImVec2(resX / 2, resY / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
         imgui.SetNextWindowSize(imgui.ImVec2(sizeX, sizeY), imgui.Cond.FirstUseEver)
-        imgui.Begin(u8'Áûñòðûé ðîçûñê || '..nick..'['..id..']', renderWindow, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse)
+        imgui.Begin('Быстрый розыск || '..nick..'['..id..']', renderWindow, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse)
         imgui.SetWindowFontScale(1.1)
 
-        -- âêëàäêè ñåðâåðîâ
+        -- вкладки серверов
         if imgui.BeginTabBar(u8'servers') then
             for _, name in ipairs(serverList) do
                 if imgui.BeginTabItem(u8(name)) then
@@ -157,7 +160,7 @@ local newFrame = imgui.OnFrame(
 
         imgui.Separator()
 
-        -- ïîëå ââîäà + êíîïêà
+        -- поле ввода + кнопка
         local inputText = u8:decode(str(inputField))
         local len = #inputText
         local width = math.max(110, math.min(400, len * 8))
@@ -167,22 +170,22 @@ local newFrame = imgui.OnFrame(
         imgui.PopItemWidth()
 
         imgui.PushStyleVarFloat(imgui.StyleVar.FrameRounding, 8)
-        -- Ôóíêöèÿ î÷èñòêè íîìåðà ñòàòüè
+        -- Функция очистки номера статьи
         local function cleanArticleNumber(s)
-            -- Îñòàâëÿåì òîëüêî öèôðû è òî÷êó
+            -- Оставляем только цифры и точку
             s = s:gsub('[^%d%.]', '')
-            -- Óáèðàåì ëèøíèå òî÷êè â íà÷àëå/êîíöå/ïîäðÿä
+            -- Убираем лишние точки в начале/конце/подряд
             s = s:gsub('^%.', ''):gsub('%.$', ''):gsub('%.%.+', '.')
             return s
         end
 
-        if imgui.Button(u8'Îáúÿâèòü', imgui.ImVec2(90, 25)) then
+        if imgui.Button('Объявить', imgui.ImVec2(90, 25)) then
             local text = u8:decode(str(inputField))
             if text == '' then return end
 
             local data = serverData[currentServer]
             if not data then
-                sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Îøèáêà êîíôèãà: '..currentServer, -1)
+                sampAddChatMessage(u8:decode'{0079bf}[QSU]:{FFFFFF} Ошибка конфига: '..currentServer, -1)
                 return
             end
 
@@ -193,7 +196,7 @@ local newFrame = imgui.OnFrame(
                     table.insert(articles, cleaned)
                 end
             end
-            sampAddChatMessage("Îáðàáîòàííûå ñòàòüè: " .. table.concat(articles, ", "), -1)
+            sampAddChatMessage(u8:decode"Обработанные статьи: " .. table.concat(articles, ", "), -1)
             local total = 0
             local result = {}
             local found = false
@@ -205,12 +208,12 @@ local newFrame = imgui.OnFrame(
                     table.insert(result, art)
                     found = true
                 else
-                    sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Ñòàòüÿ "' .. art .. '" íå íàéäåíà â êîíôèãå.', -1)
+                    sampAddChatMessage(u8:decode'{0079bf}[QSU]:{FFFFFF} Статья "' .. art .. u8:decode'" не найдена в конфиге.', -1)
                 end
             end
 
             if not found then
-                sampAddChatMessage('{0079bf}[QSU]:{FFFFFF} Ñòàòüè íå íàéäåíû. Èñïîëüçóéòå ôîðìàò: 2.5 + 4.1.1', -1)
+                sampAddChatMessage(u8:decode'{0079bf}[QSU]:{FFFFFF} Статьи не найдены. Используйте формат: 2.5 + 4.1.1', -1)
                 return
             end
 
@@ -218,25 +221,25 @@ local newFrame = imgui.OnFrame(
             local resultText = table.concat(result, ' + ')
 
             lua_thread.create(function()
-                sampSendChat('/me ñíÿâ ÊÏÊ ñ òàêòè÷åñêîãî ïîÿñà, íàø¸ë äîñüå ïðåñòóïíèêà, ïîñëå ÷åãî çàéäÿ â ïóíêò "Wanted"..')
+                sampSendChat(u8:decode'/me сняв КПК с тактического пояса, нашёл досье преступника, после чего зайдя в пункт "Wanted"..')
                 wait(1000)
-                sampSendChat('/me ..ââ¸ë íåêîòîðûå êîððåêòèâû â äîñüå ïðåñòóïíèêà, ïîñëå ÷åãî óáðàë ÊÏÊ íà òàêòè÷åñêèé ïîÿñ')
+                sampSendChat(u8:decode'/me ..ввёл некоторые коррективы в досье преступника, после чего убрал КПК на тактический пояс')
                 wait(1000)
-                sampSendChat("/su "..id.." "..total.." "..resultText)
-                sampAddChatMessage("/su "..id.." "..total.." "..resultText, -1)
+                sampSendChat(u8:decode"/su "..id.." "..total.." "..resultText)
+                sampAddChatMessage(u8:decode"/su "..id.." "..total.." "..resultText, -1)
             end)
         end
         imgui.PopStyleVar()
 
         if imgui.IsItemHovered() then
             imgui.BeginTooltip()
-            imgui.Text(u8'Ðó÷íîé ââîä (2.5 + 4.1.1 + ...)')
+            imgui.Text('Ручной ввод (2.5 + 4.1.1 + ...)')
             imgui.EndTooltip()
         end
 
         imgui.Separator()
 
-        -- ãëàâû òåêóùåãî ñåðâåðà
+        -- главы текущего сервера
         local data = serverData[currentServer]
         if data and data.chapters and #data.chapters > 0 then
             for _, chapter in ipairs(data.chapters) do
@@ -249,7 +252,7 @@ local newFrame = imgui.OnFrame(
                 end
             end
         else
-            -- Ïîëó÷àåì ðàçìåðû äîñòóïíîé îáëàñòè (îòñòóïû óæå ó÷òåíû)
+            -- Получаем размеры доступной области (отступы уже учтены)
             local avail = imgui.GetContentRegionAvail()
             local text = u8"SOON"
             local textSize = imgui.CalcTextSize(text)
