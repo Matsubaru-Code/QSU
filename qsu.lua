@@ -24,7 +24,7 @@ local sampev = require 'lib.samp.events'
 
 local version = 1.5
 update_state = false
-local update_url = requests.get("https://raw.githubusercontent.com/Matsubaru-Code/QSU/refs/heads/main/update.json")
+local update_url = requests.get("https://raw.githubusercontent.com/Matsubaru-Code/QSU/main/update.json?nocache="..math.random(1,999999))
 local script_url = "https://github.com/Matsubaru-Code/QSU/raw/refs/heads/main/qsu.lua"
 local script_path = thisScript().path
 a = decodeJson(update_url.text) -- Получаем её, декодируем
