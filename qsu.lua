@@ -145,7 +145,7 @@ local newFrame = imgui.OnFrame(
         local sizeX, sizeY = 750, 400
         imgui.SetNextWindowPos(imgui.ImVec2(resX / 2, resY / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
         imgui.SetNextWindowSize(imgui.ImVec2(sizeX, sizeY), imgui.Cond.FirstUseEver)
-        imgui.Begin('Быстрый розыск || '..nick..'['..id..']', renderWindow, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse)
+        imgui.Begin('Быстрый розыск v4|| '..nick..'['..id..']', renderWindow, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse)
         imgui.SetWindowFontScale(1.1)
 
         -- вкладки серверов
