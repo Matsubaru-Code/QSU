@@ -23,7 +23,7 @@ local sampev = require 'lib.samp.events'
 local version = 1.3
 update_state = false
 local update_url = requests.get("https://raw.githubusercontent.com/Matsubaru-Code/QSU/refs/heads/main/update.json")
-local script_url = "https://github.com/Matsubaru-Code/QSU/raw/refs/heads/main/qsu%20%E2%80%94%20%D0%BA%D0%BE%D0%BF%D0%B8%D1%8F.lua"
+local script_url = "https://github.com/Matsubaru-Code/QSU/raw/refs/heads/main/qsu.lua"
 local script_path = thisScript().path
 a = decodeJson(update_url.text) -- Ïîëó÷àåì å¸, äåêîäèðóåì
 
