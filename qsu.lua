@@ -66,7 +66,7 @@ function main()
     while not isSampAvailable() do wait(0) end
     --sampAddChatMessage(u8:decodea["version"],-1)
     if tonumber(a["version"]) > version then
-        sampAddChatMessage(u8:decode"{0079bf}[QSU]:{FFFFFF}Есть обновление! Версия: {03A89E}" .. a["version"], -1)
+        sampAddChatMessage(u8:decode"{0079bf}[QSU]:{FFFFFF} Есть обновление! Версия: {03A89E}" .. a["version"], -1)
         update_state = true
     end
 
@@ -104,7 +104,7 @@ function main()
         if update_state then
             downloadUrlToFile(script_url, script_path, function(id, status)
                 if status == dlstatus.STATUS_ENDDOWNLOADDATA then
-                    sampAddChatMessage(u8:decode"{0079bf}[QSU]:{FFFFFF}Скрипт успешно обновлен!", -1)
+                    sampAddChatMessage(u8:decode"{0079bf}[QSU]:{FFFFFF} Скрипт успешно обновлен!", -1)
                     thisScript():reload()
                 end
                 update_state = false
